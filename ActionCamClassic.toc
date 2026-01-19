@@ -1,0 +1,5 @@
+## Interface: 11404        -- Classic TBC/era versjon (sjekk Interface-versjon!)
+## Title: ActionCamClassic
+## Notes: Action Camera Addon for WoW Classic
+## Author: Auduki - Audun Midtgård Meckelborg
+ActionCamClassic.lua

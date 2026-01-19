@@ -1,4 +1,0 @@
-## Interface: 11404        -- Classic TBC/era versjon (sjekk Interface-versjon!)
-## Title: MyAddon
-## Notes: Tester print i chat
-MyAddon.lua
