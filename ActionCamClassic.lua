@@ -1,31 +1,19 @@
+print("Addon has loaded!")
 
 
-local frame = CreateFrame("Frame")
+local settingsPanel = CreateFrame("Frame", "ActionCamSettingsPanel", UIParent, "BackdropTemplate")
+settingsPanel:SetSize(700, 500)
+settingsPanel:SetPoint("CENTER")
 
-frame:RegisterEvent("ADDON_LOADED")
+settingsPanel:SetBackdrop({
+    bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",  -- background texture
+    edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",    -- border texture
+    tile = true,
+    tileSize = 16,
+    edgeSize = 16,
+    insets = { left = 4, right = 4, top = 4, bottom = 4 }
+})
 
-frame:SetScript("OnEvent", function(self, event, addonName)
-    if addonName == "ActionCamClassic" then
-        print("ActionCamClassic fully initialized!")
-    end
-end)
+settingsPanel:SetBackdropColor(0, 0, 0, 0.8)
+ --settingsPanel:Hide()
 
-local button = CreateFrame("Button", "ActionCamClassicButton", UIParent, "UIPanelButtonTemplate")
-
-button:SetSize(140, 40)
-
-button:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
-
-button:SetText("Action Cam: Off")
-
-button:SetScript("OnClick", function()
-    actionCamEnabled = not actionCamEnabled
-
-    if actionCamEnabled then
-        print("Action Cam is Enabled!")
-        button:SetText("Action Cam: On")
-    else
-        print("Action Cam is Disabled!")
-        button:SetText("Action Cam: Off")
-    end
-end)
