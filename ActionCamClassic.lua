@@ -29,3 +29,8 @@ button:SetScript("OnClick", function()
         print("Frame Shown")
     end
 end)
+
+
+local closeButton = CreateFrame("Button", nil, frame, "UIPanelCloseButton")
+
+closeButton:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -5, -5)
