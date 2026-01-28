@@ -1,19 +1,31 @@
-print("Addon has loaded!")
+print("ActionCamClassic has loaded!")
 
+local frame = CreateFrame("Frame", "MyFirstWindow", UIParent, "BackdropTemplate")
 
-local settingsPanel = CreateFrame("Frame", "ActionCamSettingsPanel", UIParent, "BackdropTemplate")
-settingsPanel:SetSize(700, 500)
-settingsPanel:SetPoint("CENTER")
+frame:SetSize(500, 350)
 
-settingsPanel:SetBackdrop({
-    bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",  -- background texture
-    edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",    -- border texture
-    tile = true,
-    tileSize = 16,
-    edgeSize = 16,
-    insets = { left = 4, right = 4, top = 4, bottom = 4 }
+frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+
+frame:SetBackdrop({
+    bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
+    edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
+    edgeSize = 16
 })
 
-settingsPanel:SetBackdropColor(0, 0, 0, 0.8)
- --settingsPanel:Hide()
+frame:Show()
 
+local button = CreateFrame("Button", "MyToggleButton", UIParent, "UIPanelButtonTemplate")
+
+button:SetSize(120, 30)
+button:SetPoint("CENTER", UIParent, "CENTER", 400, -150)
+button:SetText("Toggle Window")
+
+button:SetScript("OnClick", function()
+    if frame:IsShown() then
+        frame:Hide()
+        print("Window Hidden")
+    else
+        frame:Show()
+        print("Frame Shown")
+    end
+end)
