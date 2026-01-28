@@ -1,36 +1,52 @@
-print("ActionCamClassic has loaded!")
+print("ActionCamClassic has loaded!") -- en print i chatten for å bekrefte at alt har lastet inn
 
-local frame = CreateFrame("Frame", "MyFirstWindow", UIParent, "BackdropTemplate")
+local frame = CreateFrame("Frame", "MyFirstWindow", UIParent, "BackdropTemplate") -- oppretter vinduet for addonen - Frame = type objekt
 
-frame:SetSize(500, 350)
+frame:SetSize(500, 350) -- størrelse på vinduet
 
-frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0) -- posisjon på vinduet
 
 frame:SetBackdrop({
-    bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
-    edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
-    edgeSize = 16
+    bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background", -- bakgrunn filen som er i spill mappen
+    edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border", -- kant tekstur som ligger i spill mappen
+    edgeSize = 16 -- størrelse på kanten
 })
 
-frame:Show()
+frame:Show() -- gjør vinduet synlig
 
-local button = CreateFrame("Button", "MyToggleButton", UIParent, "UIPanelButtonTemplate")
 
-button:SetSize(120, 30)
-button:SetPoint("CENTER", UIParent, "CENTER", 400, -150)
-button:SetText("Toggle Window")
 
-button:SetScript("OnClick", function()
+local closeButton = CreateFrame("Button", nil, frame, "UIPanelCloseButton") -- lager en close knapp i vinduet - bruker en closebutton template som ligger standard i spillet
+
+closeButton:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -5, -5) -- setter posisjonen på close-knappen til vinduet
+
+local miniButton = CreateFrame("Button", "ActionCamClassicMiniButton", Minimap) -- lager en knapp på minimappet "Minimap" gjør at den er festet til minimappet
+miniButton:SetSize(32, 32) -- gir knappen en størrelse
+miniButton:SetPoint("TOPLEFT", Minimap, "TOPLEFT") -- gir minimap knappen en posisjon
+
+miniButton:SetNormalTexture("Interface\\Icons\\INV_Misc_Gear_01") -- gjør minimap knappen synlig vet et ikon som finnes i spillfilene
+
+miniButton:SetScript("OnClick", function() -- gir knappen en funksjon, lukkes hvis den blir vist, vises hvis den er lukket
     if frame:IsShown() then
         frame:Hide()
-        print("Window Hidden")
     else
         frame:Show()
-        print("Frame Shown")
     end
 end)
 
+miniButton:SetMovable(true) -- gjør knappen flyttbar
+miniButton:EnableMouse(true) -- lar knappen reagere på musen
+miniButton:RegisterForDrag("LeftButton") -- lar venstreklikk dra
 
-local closeButton = CreateFrame("Button", nil, frame, "UIPanelCloseButton")
+--[[
+local miniAngle = 45
 
-closeButton:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -5, -5)
+local function UpdateMiniButtonPosition()
+    local radius = 80
+    local x = radius * math.cos(miniAngle * math.pi / 180)
+    local y = radius * math.sin(miniAngle * math.pi / 180)
+    miniButton:SetPoint("CENTER", Minimap, "CENTER", x, y)
+end
+
+UpdateMiniButtonPosition()
+]]
