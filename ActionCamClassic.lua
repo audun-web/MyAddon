@@ -99,19 +99,42 @@ titleText:SetPoint("TOP", frame, "TOP", 0, -15) -- setter posisjon på teksten, 
 titleText:SetText("ActionCamClassic") -- hva teksten sier
 
 --------------------------------------------------------------------------------------------------------------
+local mountButtonStatus = false
 
+local mountCamButton = CreateFrame("Button", "MountCamButton", frame, "UIPanelButtonTemplate")
+mountCamButton:SetSize(175, 32)
+mountCamButton:SetPoint("TOPLEFT", frame, "TOPLEFT", 15, -45)
+mountCamButton:SetText("ActionCam on Mount: Off")
 
 local eventFrame = CreateFrame("Frame")
-eventFrame:RegisterEvent("PLAYER_MOUNT_DISPLAY_CHANGED")
-
-eventFrame:SetScript("OnEvent", function()
-    if IsMounted() then
-        print("Mounted")
-        ConsoleExec("ActionCam on")
-        ConsoleExec("ActionCam focusOff")
-        ConsoleExec("ActionCam noHeadMove")
-    else
-        print("Dismounted")
-        ConsoleExec("ActionCam off")
+eventFrame:RegisterEvent("PLAYER_MOUNT_DISPLAY_CHANGED") -- registrer eventet én gang
+eventFrame:SetScript("OnEvent", function(self, event)
+    if mountButtonStatus then -- kjør bare når knappen er aktivert
+        if IsMounted() then
+            print("Mounted")
+            ConsoleExec("ActionCam full")
+            ConsoleExec("ActionCam focusOff")
+            ConsoleExec("ActionCam noHeadMove")
+        else
+            print("Dismounted")
+            
+            ConsoleExec("ActionCam off")
+        end
     end
 end)
+
+mountCamButton:SetScript("OnClick", function()
+    mountButtonStatus = not mountButtonStatus
+    if mountButtonStatus then
+        mountCamButton:SetText("ActionCam on Mount: On")
+    else
+        mountCamButton:SetText("ActionCam on Mount: Off")
+        -- slå av ActionCam direkte hvis man deaktiverer knappen mens man er mounted
+        if IsMounted() then
+            ConsoleExec("ActionCam off")
+        end
+    end
+end)
+
+
+
