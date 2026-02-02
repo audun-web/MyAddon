@@ -1,5 +1,7 @@
 print("ActionCamClassic has loaded!") -- en print i chatten for å bekrefte at alt har lastet inn
 
+--------------------------------------------------------------------------------------------------------------
+
 local frame = CreateFrame("Frame", "MyFirstWindow", UIParent, "BackdropTemplate") -- oppretter vinduet for addonen - Frame = type objekt
 
 frame:SetSize(500, 350) -- størrelse på vinduet
@@ -14,7 +16,7 @@ frame:SetBackdrop({
 
 frame:Show() -- gjør vinduet synlig
 
-
+--------------------------------------------------------------------------------------------------------------
 
 local closeButton = CreateFrame("Button", nil, frame, "UIPanelCloseButton") -- lager en close knapp i vinduet - bruker en closebutton template som ligger standard i spillet
 
@@ -22,7 +24,7 @@ closeButton:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -5, -5) -- setter posisjonen
 
 local miniButton = CreateFrame("Button", "ActionCamClassicMiniButton", Minimap) -- lager en knapp på minimappet "Minimap" gjør at den er festet til minimappet
 miniButton:SetSize(32, 32) -- gir knappen en størrelse
-miniButton:SetPoint("TOPLEFT", Minimap, "TOPLEFT") -- gir minimap knappen en posisjon
+miniButton:SetPoint("CENTER", Minimap, "CENTER", 80, 0) -- gir minimap knappen en posisjon
 
 miniButton:SetNormalTexture("Interface\\Icons\\INV_Misc_Gear_01") -- gjør minimap knappen synlig vet et ikon som finnes i spillfilene
 
@@ -38,15 +40,51 @@ miniButton:SetMovable(true) -- gjør knappen flyttbar
 miniButton:EnableMouse(true) -- lar knappen reagere på musen
 miniButton:RegisterForDrag("LeftButton") -- lar venstreklikk dra
 
---[[
-local miniAngle = 45
+miniButton:SetScript("OnMouseDown", function(self, button) -- script for når du trykket med musen
+    if button == "LeftButton" then
+        self.isDragging = true -- sier at knappen nå dras
+    end
+end)
+
+miniButton:SetScript("OnMouseUp", function(self, button) -- script for når du trykket med musen
+    if button == "LeftButton" then
+        self.isDragging = false -- sier at knappen ikke dras
+    end
+end)
+
+--------------------------------------------------------------------------------------------------------------
+
+local miniAngle = 0
 
 local function UpdateMiniButtonPosition()
     local radius = 80
-    local x = radius * math.cos(miniAngle * math.pi / 180)
-    local y = radius * math.sin(miniAngle * math.pi / 180)
+    local rad = miniAngle * math.pi / 180
+    local x = radius * math.cos(rad)
+    local y = radius * math.sin(rad)
+    
     miniButton:SetPoint("CENTER", Minimap, "CENTER", x, y)
 end
 
 UpdateMiniButtonPosition()
-]]
+
+--------------------------------------------------------------------------------------------------------------
+
+local updateFrame = CreateFrame("Frame")
+updateFrame:SetScript("OnUpdate", function(self, elapsed)
+    if miniButton.isDragging then
+        
+        local mx, my = GetCursorPosition() -- hent museposisjon
+        local scale = UIParent:GetEffectiveScale() -- henter scalen på hele UI
+        mx = mx / scale -- finner riktig posisjon i forhold til minimappet
+        my = my / scale
+
+        
+        local centerX, centerY = Minimap:GetCenter() -- midtpunktet til minimap
+        
+        
+        miniAngle = math.deg(math.atan2(my - centerY, mx - centerX)) -- regn ut vinkelen fra midten av minimap til mus
+        
+        -- oppdater posisjon
+        UpdateMiniButtonPosition()
+    end
+end)
