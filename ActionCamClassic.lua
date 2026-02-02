@@ -2,9 +2,9 @@ print("ActionCamClassic has loaded!") -- en print i chatten for å bekrefte at a
 
 --------------------------------------------------------------------------------------------------------------
 
-local frame = CreateFrame("Frame", "MyFirstWindow", UIParent, "BackdropTemplate") -- oppretter vinduet for addonen - Frame = type objekt
+local frame = CreateFrame("Frame", "MainWindow", UIParent, "BackdropTemplate") -- oppretter vinduet for addonen - Frame = type objekt
 
-frame:SetSize(500, 350) -- størrelse på vinduet
+frame:SetSize(600, 450) -- størrelse på vinduet
 
 frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0) -- posisjon på vinduet
 
@@ -90,10 +90,28 @@ updateFrame:SetScript("OnUpdate", function(self, elapsed)
 end)
 
 
-
+--------------------------------------------------------------------------------------------------------------
 
 local titleText = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge") -- legger til tittel text, OVERLAY gjør at teksten er over vinduet
 
 titleText:SetPoint("TOP", frame, "TOP", 0, -15) -- setter posisjon på teksten, fester den til overlay
 
 titleText:SetText("ActionCamClassic") -- hva teksten sier
+
+--------------------------------------------------------------------------------------------------------------
+
+
+local eventFrame = CreateFrame("Frame")
+eventFrame:RegisterEvent("PLAYER_MOUNT_DISPLAY_CHANGED")
+
+eventFrame:SetScript("OnEvent", function()
+    if IsMounted() then
+        print("Mounted")
+        ConsoleExec("ActionCam on")
+        ConsoleExec("ActionCam focusOff")
+        ConsoleExec("ActionCam noHeadMove")
+    else
+        print("Dismounted")
+        ConsoleExec("ActionCam off")
+    end
+end)
