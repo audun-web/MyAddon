@@ -58,7 +58,7 @@ end)
 -- startvinkel for minimap-knappen (0 grader = høyre side av minimappet)
 local miniAngle = 180
 
-local function UpdateMiniButtonPosition()
+local function UpdateMiniButtonPosition() -- ai generert funksjon for å kunne dra knappen rundt minimappet
     local radius = 80
     local rad = miniAngle * math.pi / 180
     local x = radius * math.cos(rad)
@@ -104,9 +104,8 @@ titleText:SetText("ActionCamClassic") -- hva teksten sier
 local mountButtonStatus = false
 
 local mountCamButton = CreateFrame("Button", "MountCamButton", frame, "UIPanelButtonTemplate")
-mountCamButton:SetSize(175, 32)
-mountCamButton:SetPoint("TOPLEFT", frame, "TOPLEFT", 15, -45)
-mountCamButton:SetText("ActionCam on Mount: Off")
+mountCamButton:SetSize(80, 32)
+mountCamButton:SetText("Off")
 
 local eventFrame = CreateFrame("Frame")
 eventFrame:RegisterEvent("PLAYER_MOUNT_DISPLAY_CHANGED") -- registrer eventet én gang
@@ -128,15 +127,32 @@ end)
 mountCamButton:SetScript("OnClick", function()
     mountButtonStatus = not mountButtonStatus
     if mountButtonStatus then
-        mountCamButton:SetText("ActionCam on Mount: On")
+        mountCamButton:SetText("On")
     else
-        mountCamButton:SetText("ActionCam on Mount: Off")
+        mountCamButton:SetText("Off")
         -- slå av ActionCam direkte hvis man deaktiverer knappen mens man er mounted
         if IsMounted() then
             ConsoleExec("ActionCam off")
         end
     end
 end)
+
+local mountCamTitle = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+
+mountCamTitle:SetPoint("TOPLEFT", frame, "TOPLEFT", 15, -75)
+mountCamTitle:SetText("ActionCam when Mounted")
+
+-- plasser knappen midt under teksten over
+mountCamButton:ClearAllPoints()
+mountCamButton:SetPoint("TOP", mountCamTitle, "BOTTOM", 0, -30)
+
+
+-- Lage en horisontal divider under tittelen
+local titleDivider = frame:CreateTexture(nil, "ARTWORK")
+titleDivider:SetColorTexture(0.6, 0.6, 0.6, 1) -- grå linje, RGBA
+titleDivider:SetSize(560, 1) -- bredde og høyde (1 px tynn)
+titleDivider:SetPoint("TOP", titleText, "BOTTOM", 0, -10) -- 10 px under tittelen
+
 
 
 
