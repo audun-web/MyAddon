@@ -88,3 +88,12 @@ updateFrame:SetScript("OnUpdate", function(self, elapsed)
         UpdateMiniButtonPosition()
     end
 end)
+
+
+
+
+local titleText = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge") -- legger til tittel text, OVERLAY gjør at teksten er over vinduet
+
+titleText:SetPoint("TOP", frame, "TOP", 0, -15) -- setter posisjon på teksten, fester den til overlay
+
+titleText:SetText("ActionCamClassic") -- hva teksten sier
