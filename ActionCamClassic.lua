@@ -1,5 +1,6 @@
 print("ActionCamClassic has loaded!") -- en print i chatten for å bekrefte at alt har lastet inn
 
+
 --------------------------------------------------------------------------------------------------------------
 
 local frame = CreateFrame("Frame", "MainWindow", UIParent, "BackdropTemplate") -- oppretter vinduet for addonen - Frame = type objekt
@@ -14,7 +15,7 @@ frame:SetBackdrop({
     edgeSize = 16 -- størrelse på kanten
 })
 
-frame:Show() -- gjør vinduet synlig
+frame:Hide() -- gjør vinduet usynlig
 
 --------------------------------------------------------------------------------------------------------------
 
@@ -54,7 +55,8 @@ end)
 
 --------------------------------------------------------------------------------------------------------------
 
-local miniAngle = 0
+-- startvinkel for minimap-knappen (0 grader = høyre side av minimappet)
+local miniAngle = 180
 
 local function UpdateMiniButtonPosition()
     local radius = 80
@@ -117,7 +119,7 @@ eventFrame:SetScript("OnEvent", function(self, event)
             ConsoleExec("ActionCam noHeadMove")
         else
             print("Dismounted")
-            
+
             ConsoleExec("ActionCam off")
         end
     end
