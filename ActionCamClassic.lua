@@ -42,7 +42,7 @@ miniButton:EnableMouse(true) -- lar knappen reagere på musen
 miniButton:RegisterForDrag("LeftButton") -- lar venstreklikk dra
 
 miniButton:SetScript("OnMouseDown", function(self, button) -- script for når du trykket med musen
-    if button == "LeftButton" then
+    if button == "LeftButton" then -- hvis knappen trykket ned er venstre museknapp
         self.isDragging = true -- sier at knappen nå dras
     end
 end)
@@ -56,7 +56,7 @@ end)
 --------------------------------------------------------------------------------------------------------------
 
 -- startvinkel for minimap-knappen (0 grader = høyre side av minimappet)
-local miniAngle = 180
+local miniAngle = 180 -- 180 grader er høyre side av minimappet
 
 local function UpdateMiniButtonPosition() -- ai generert funksjon for å kunne dra knappen rundt minimappet
     local radius = 80
@@ -71,9 +71,9 @@ UpdateMiniButtonPosition()
 
 --------------------------------------------------------------------------------------------------------------
 
-local updateFrame = CreateFrame("Frame")
-updateFrame:SetScript("OnUpdate", function(self, elapsed)
-    if miniButton.isDragging then
+local updateFrame = CreateFrame("Frame") -- legger til en tom frame, usynlig
+updateFrame:SetScript("OnUpdate", function(self, elapsed) -- script som går hele tiden og venter på at noe skjer
+    if miniButton.isDragging then -- hvis minimap knappen blir dratt
         
         local mx, my = GetCursorPosition() -- hent museposisjon
         local scale = UIParent:GetEffectiveScale() -- henter scalen på hele UI
@@ -101,20 +101,20 @@ titleText:SetPoint("TOP", frame, "TOP", 0, -15) -- setter posisjon på teksten, 
 titleText:SetText("ActionCamClassic") -- hva teksten sier
 
 --------------------------------------------------------------------------------------------------------------
-local mountButtonStatus = false
+local mountButtonStatus = false -- true eller false her er av eller på i instillingspanelet i spillet
 
-local mountCamButton = CreateFrame("Button", "MountCamButton", frame, "UIPanelButtonTemplate")
-mountCamButton:SetSize(80, 32)
-mountCamButton:SetText("Off")
+local mountCamButton = CreateFrame("Button", "MountCamButton", frame, "UIPanelButtonTemplate") -- legger til knapp
+mountCamButton:SetSize(80, 32) -- knapp størrelse
+mountCamButton:SetText("Off") -- startteksten på knappen hver gang du åpner spillet
 
-local eventFrame = CreateFrame("Frame")
-eventFrame:RegisterEvent("PLAYER_MOUNT_DISPLAY_CHANGED") -- registrer eventet én gang
-eventFrame:SetScript("OnEvent", function(self, event)
+local eventFrame = CreateFrame("Frame") -- legger til en tom frame
+eventFrame:RegisterEvent("PLAYER_MOUNT_DISPLAY_CHANGED") -- gir framen en funksjon som leter etter in-game events
+eventFrame:SetScript("OnEvent", function(self, event) -- script når valgt event skjer
     if mountButtonStatus then -- kjør bare når knappen er aktivert
-        if IsMounted() then
-            print("Mounted")
-            ConsoleExec("ActionCam full")
-            ConsoleExec("ActionCam focusOff")
+        if IsMounted() then -- IsMounted er en funksjon i spillet som sier at spilleren rir på hest
+            print("Mounted") -- print funksjon i chat
+            ConsoleExec("ActionCam full") -- konsoll kommando i spillet
+            ConsoleExec("ActionCam focusOff") 
             ConsoleExec("ActionCam noHeadMove")
         else
             print("Dismounted")
@@ -124,8 +124,8 @@ eventFrame:SetScript("OnEvent", function(self, event)
     end
 end)
 
-mountCamButton:SetScript("OnClick", function()
-    mountButtonStatus = not mountButtonStatus
+mountCamButton:SetScript("OnClick", function() -- funksjon når knappen trykkes
+    mountButtonStatus = not mountButtonStatus -- setter boolean til den motsatte verdien av hva den allerede er
     if mountButtonStatus then
         mountCamButton:SetText("On")
     else
@@ -137,18 +137,21 @@ mountCamButton:SetScript("OnClick", function()
     end
 end)
 
-local mountCamTitle = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+--------------------------------------------------------------------------------------------------------------
 
-mountCamTitle:SetPoint("TOPLEFT", frame, "TOPLEFT", 15, -75)
-mountCamTitle:SetText("ActionCam when Mounted")
+local mountCamTitle = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge") -- legger til en tekst - overlay betyr at den ligger over frame
+
+mountCamTitle:SetPoint("TOPLEFT", frame, "TOPLEFT", 15, -75) -- setter posisjon til teksten
+mountCamTitle:SetText("ActionCam when Mounted") -- teksten
 
 -- plasser knappen midt under teksten over
-mountCamButton:ClearAllPoints()
-mountCamButton:SetPoint("TOP", mountCamTitle, "BOTTOM", 0, -30)
+mountCamButton:ClearAllPoints() -- fjerner alle tidligere ankre hvor knappen er festet
+mountCamButton:SetPoint("TOP", mountCamTitle, "BOTTOM", 0, -30) -- setter posisjonen til knappen
 
+--------------------------------------------------------------------------------------------------------------
 
 -- Lage en horisontal divider under tittelen
-local titleDivider = frame:CreateTexture(nil, "ARTWORK")
+local titleDivider = frame:CreateTexture(nil, "ARTWORK") -- legger til en divider linje
 titleDivider:SetColorTexture(0.6, 0.6, 0.6, 1) -- grå linje, RGBA
 titleDivider:SetSize(560, 1) -- bredde og høyde (1 px tynn)
 titleDivider:SetPoint("TOP", titleText, "BOTTOM", 0, -10) -- 10 px under tittelen
