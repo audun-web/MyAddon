@@ -1,0 +1,9 @@
+## TODO – ActionCamClassic
+
+- [ ] Legg til flere knapper i “ActionCam Settings” (f.eks. `noHeadMove` og `focusOff`)
+- [ ] Lag en “Slå av alt”-knapp (ActionCam off)
+- [ ] Legg til tooltip på minimap-knappen (klikk = åpne/lukke, dra = flytt)
+- [ ] Legg til tooltip på knappene i vinduet (forklar hva de gjør)
+- [ ] Legg til slash command: `/acc` for å åpne/lukke vinduet
+- [ ] Gjør så knappen “ActionCam when Mounted” husker On/Off etter /reload (valgfritt)
+- [ ] Oppdater README med 1–2 bilder av UI (valgfritt)
