@@ -160,12 +160,13 @@ titleDivider:SetPoint("TOP", titleText, "BOTTOM", 0, -10) -- 10 px under tittele
 
 local actionCamSettingsTitle = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge") -- legger til et tekst element
 
+-- Setter teksten på riktig sted i framen
 actionCamSettingsTitle:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -35, -75)
 actionCamSettingsTitle:SetText("ActionCam Settings")
 
 
 --------------------------------------------------------------------------------------------------------------
--- ActionCam settings state
+-- variabler for å bruke en skru av alle funksjon
 local actionCamFullEnabled = false
 local actionCamNoHeadMoveEnabled = false
 local actionCamFocusOffEnabled = false
@@ -176,25 +177,25 @@ local function TurnAllOff()
     actionCamNoHeadMoveEnabled = false
     actionCamFocusOffEnabled = false
 
-    ConsoleExec("ActionCam off")
+    ConsoleExec("ActionCam off") -- skrur av alle action cam settings 
 
+    -- endrer teksten på de tre knappene for å matche settings statusen
     fullButton:SetText("ActionCam Full: Off")
     noHeadMoveButton:SetText("No Head Move: Off")
     focusOffButton:SetText("Focus Off: Off")
 
-    print("All ActionCam settings turned off")
+    print("All ActionCam settings turned off") -- print i chat for å bekrefte settings endringen
 end
 
---------------------------------------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------------------------------------
 -- ActionCam Full
 fullButton = CreateFrame("Button", "FullButton", frame, "UIPanelButtonTemplate")
 fullButton:SetText("ActionCam Full: Off")
-fullButton:SetSize(fullButton:GetFontString():GetStringWidth() + 20, 32)
-fullButton:SetPoint("TOP", actionCamSettingsTitle, "BOTTOM", 0, -10)
+fullButton:SetSize(fullButton:GetFontString():GetStringWidth() + 20, 32) -- setter størrelsen, gjør størrelsen på knappen til å matche string størrelsen
+fullButton:SetPoint("TOP", actionCamSettingsTitle, "BOTTOM", 0, -10) -- setter posisjonen til knappen i midten av actionCamSettingsTitle
 
-fullButton:SetScript("OnClick", function()
+fullButton:SetScript("OnClick", function() -- script for å skru av og på knappen/knappene
     if actionCamFullEnabled then
         TurnAllOff()
     else
