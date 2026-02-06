@@ -1,6 +1,6 @@
 ## TODO – ActionCamClassic
 
-- [ ] Legg til flere knapper i “ActionCam Settings” (f.eks. `noHeadMove` og `focusOff`)
+- [x] Legg til flere knapper i “ActionCam Settings” (f.eks. `noHeadMove` og `focusOff`)
 - [ ] Lag en “Slå av alt”-knapp (ActionCam off)
 - [ ] Legg til tooltip på minimap-knappen (klikk = åpne/lukke, dra = flytt)
 - [ ] Legg til tooltip på knappene i vinduet (forklar hva de gjør)

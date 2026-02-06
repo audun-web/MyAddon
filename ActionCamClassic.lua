@@ -146,7 +146,7 @@ mountCamTitle:SetText("ActionCam when Mounted") -- teksten
 
 -- plasser knappen midt under teksten over
 mountCamButton:ClearAllPoints() -- fjerner alle tidligere ankre hvor knappen er festet
-mountCamButton:SetPoint("TOP", mountCamTitle, "BOTTOM", 0, -30) -- setter posisjonen til knappen
+mountCamButton:SetPoint("TOP", mountCamTitle, "BOTTOM", 0, -10) -- setter posisjonen til knappen
 
 --------------------------------------------------------------------------------------------------------------
 
@@ -156,6 +156,87 @@ titleDivider:SetColorTexture(0.6, 0.6, 0.6, 1) -- grå linje, RGBA
 titleDivider:SetSize(560, 1) -- bredde og høyde (1 px tynn)
 titleDivider:SetPoint("TOP", titleText, "BOTTOM", 0, -10) -- 10 px under tittelen
 
+--------------------------------------------------------------------------------------------------------------
+
+local actionCamSettingsTitle = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge") -- legger til et tekst element
+
+actionCamSettingsTitle:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -35, -75)
+actionCamSettingsTitle:SetText("ActionCam Settings")
+
+
+--------------------------------------------------------------------------------------------------------------
+-- ActionCam settings state
+local actionCamFullEnabled = false
+local actionCamNoHeadMoveEnabled = false
+local actionCamFocusOffEnabled = false
+
+-- Slår av ALT
+local function TurnAllOff()
+    actionCamFullEnabled = false
+    actionCamNoHeadMoveEnabled = false
+    actionCamFocusOffEnabled = false
+
+    ConsoleExec("ActionCam off")
+
+    fullButton:SetText("ActionCam Full: Off")
+    noHeadMoveButton:SetText("No Head Move: Off")
+    focusOffButton:SetText("Focus Off: Off")
+
+    print("All ActionCam settings turned off")
+end
+
+--------------------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------------------
+-- ActionCam Full
+fullButton = CreateFrame("Button", "FullButton", frame, "UIPanelButtonTemplate")
+fullButton:SetText("ActionCam Full: Off")
+fullButton:SetSize(fullButton:GetFontString():GetStringWidth() + 20, 32)
+fullButton:SetPoint("TOP", actionCamSettingsTitle, "BOTTOM", 0, -10)
+
+fullButton:SetScript("OnClick", function()
+    if actionCamFullEnabled then
+        TurnAllOff()
+    else
+        actionCamFullEnabled = true
+        ConsoleExec("ActionCam full")
+        fullButton:SetText("ActionCam Full: On")
+    end
+end)
+
+--------------------------------------------------------------------------------------------------------------
+-- No Head Move
+noHeadMoveButton = CreateFrame("Button", "NoHeadMoveButton", frame, "UIPanelButtonTemplate")
+noHeadMoveButton:SetText("No Head Move: Off")
+noHeadMoveButton:SetSize(noHeadMoveButton:GetFontString():GetStringWidth() + 20, 32)
+noHeadMoveButton:SetPoint("TOP", fullButton, "BOTTOM", 0, -8)
+
+noHeadMoveButton:SetScript("OnClick", function()
+    if actionCamNoHeadMoveEnabled then
+        TurnAllOff()
+    else
+        actionCamNoHeadMoveEnabled = true
+        ConsoleExec("ActionCam noHeadMove")
+        noHeadMoveButton:SetText("No Head Move: On")
+    end
+end)
+
+--------------------------------------------------------------------------------------------------------------
+-- Focus Off
+focusOffButton = CreateFrame("Button", "FocusOffButton", frame, "UIPanelButtonTemplate")
+focusOffButton:SetText("Focus Off: Off")
+focusOffButton:SetSize(focusOffButton:GetFontString():GetStringWidth() + 20, 32)
+focusOffButton:SetPoint("TOP", noHeadMoveButton, "BOTTOM", 0, -8)
+
+focusOffButton:SetScript("OnClick", function()
+    if actionCamFocusOffEnabled then
+        TurnAllOff()
+    else
+        actionCamFocusOffEnabled = true
+        ConsoleExec("ActionCam focusOff")
+        focusOffButton:SetText("Focus Off: On")
+    end
+end)
 
 
 
