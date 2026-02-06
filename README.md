@@ -10,7 +10,7 @@ Addonen inneholder en funksjon hvor kameraet endrer til action kamera når spill
 
 Du må nedlaste spillet World of Warcraft Classic Era via Battle.Net launcheren til Blizzard. 
 
-Deretter kan spilleren nedlaste addonen ved å extracte zip. filen inn i '/Applications/World of Warcraft/_classic_era_/Interface/AddOns'
+Deretter kan spilleren nedlaste addonen ved å extracte zip. filen inn i `/Applications/World of Warcraft/_classic_era_/Interface/AddOns`
 
 Spilleren må så åpne spillet på nytt eller skrive /reload eller /rl i chatten for å reloade alle nye filer og oppdateringer. 
 
