@@ -56,6 +56,21 @@ miniButton:SetScript("OnMouseUp", function(self, button) -- script for når du t
     end
 end)
 
+miniButton:SetScript("OnEnter", function(self) -- OnEnter betyr når musen begynner å hovere objektet
+    GameTooltip:SetOwner(self, "ANCHOR_RIGHT") -- GameTooltip er innebygd tooltip funksjon i spillfilene
+    GameTooltip:SetText("ActionCamClassic", 1, 1, 1) -- tittelen på tooltip framen
+    GameTooltip:AddLine(" ", 1, 1, 1)
+    GameTooltip:AddLine("Left Click: Open settings", 0.8, 0.8, 0.8) -- ny linje tekst på tooltip framen
+    GameTooltip:AddLine("Drag: Move minimap button", 0.8, 0.8, 0.8)
+    GameTooltip:Show()
+end)
+
+miniButton:SetScript("OnLeave", function(self) -- når musen forlater hover av objekter
+    GameTooltip:Hide()
+end)
+
+
+
 --------------------------------------------------------------------------------------------------------------
 
 -- startvinkel for minimap-knappen (0 grader = høyre side av minimappet)
