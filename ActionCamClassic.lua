@@ -30,7 +30,6 @@ SlashCmdList["ACTIONCAM"] = function(msg)
         frame:Show()
     end
 end
-    
 
 
 --------------------------------------------------------------------------------------------------------------
@@ -40,10 +39,31 @@ local closeButton = CreateFrame("Button", nil, frame, "UIPanelCloseButton") -- l
 closeButton:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -5, -5) -- setter posisjonen på close-knappen til vinduet
 
 local miniButton = CreateFrame("Button", "ActionCamClassicMiniButton", Minimap) -- lager en knapp på minimappet "Minimap" gjør at den er festet til minimappet
-miniButton:SetSize(32, 32) -- gir knappen en størrelse
-miniButton:SetPoint("CENTER", Minimap, "CENTER", 80, 0) -- gir minimap knappen en posisjon
+miniButton:SetSize(31, 31) -- klassisk størrelse for minimap-knapper (samme som mange pro addons bruker)
+miniButton:SetPoint("CENTER", Minimap, "CENTER", 80, 0) -- startposisjon før vi bruker vinkel-funksjonen
 
-miniButton:SetNormalTexture("Interface\\Icons\\INV_Misc_Gear_01") -- gjør minimap knappen synlig vet et ikon som finnes i spillfilene
+-- sørg for at knappen ligger over minimappet
+miniButton:SetFrameStrata("HIGH")
+miniButton:SetFrameLevel(Minimap:GetFrameLevel() + 5)
+
+-- ikon inni knappen (addon-logoen)
+local miniButtonIcon = miniButton:CreateTexture(nil, "BACKGROUND")
+miniButtonIcon:SetTexture("Interface\\AddOns\\ActionCamClassic\\docs\\img\\ACC-logo.png")
+miniButtonIcon:SetTexCoord(0.1, 0.9, 0.1, 0.9) -- kutter hjørnene litt for rundere følelse
+-- klassisk plassering brukt av mange addons, tilpasset MiniMap-TrackingBorder
+miniButtonIcon:SetPoint("TOPLEFT", miniButton, "TOPLEFT", 7, -5)
+miniButtonIcon:SetPoint("BOTTOMRIGHT", miniButton, "BOTTOMRIGHT", -5, 7)
+miniButton.icon = miniButtonIcon
+
+-- gull-sirkel rundt, samme stil som mange profesjonelle addons bruker
+local miniButtonBorder = miniButton:CreateTexture(nil, "OVERLAY")
+miniButtonBorder:SetTexture("Interface\\Minimap\\MiniMap-TrackingBorder")
+miniButtonBorder:SetPoint("TOPLEFT", miniButton, "TOPLEFT", 0, 0) -- denne texturen er laget for å starte i TOPLEFT på en 31x31-knapp
+miniButtonBorder:SetSize(53, 53)
+miniButton.border = miniButtonBorder
+
+-- highlight når man hovere knappen (WoW håndterer plasseringen når vi bare gir den texturen)
+miniButton:SetHighlightTexture("Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight")
 
 miniButton:SetScript("OnClick", function() -- gir knappen en funksjon, lukkes hvis den blir vist, vises hvis den er lukket
     if frame:IsShown() then
@@ -90,7 +110,7 @@ end)
 local miniAngle = 180 -- 180 grader er høyre side av minimappet
 
 local function UpdateMiniButtonPosition() -- ai generert funksjon for å kunne dra knappen rundt minimappet
-    local radius = 80
+    local radius = 80 -- større radius for å plassere knappen utenfor minimappet, men fortsatt festet
     local rad = miniAngle * math.pi / 180
     local x = radius * math.cos(rad)
     local y = radius * math.sin(rad)
@@ -271,6 +291,85 @@ focusOffButton:SetScript("OnClick", function()
 end)
 
 
+
+--------------------------------------------------------------------------------------------------------------
+
+-- SavedVariables for å lagre innstillinger mellom innlogginger/reload
+local savedVarsFrame = CreateFrame("Frame")
+
+savedVarsFrame:RegisterEvent("ADDON_LOADED")
+savedVarsFrame:RegisterEvent("PLAYER_LOGOUT")
+
+savedVarsFrame:SetScript("OnEvent", function(self, event, arg1) -- script som kjøres når spiller logger av og addon
+    if event == "ADDON_LOADED" and arg1 == "ActionCamClassic" then
+        
+        ActionCamClassicDB = ActionCamClassicDB or {} -- sørg for at tabellen finnes
+
+        -- sett standardverdier hvis de ikke finnes fra før
+        if ActionCamClassicDB.miniAngle == nil then
+            ActionCamClassicDB.miniAngle = 180
+        end
+        if ActionCamClassicDB.mountButtonStatus == nil then
+            ActionCamClassicDB.mountButtonStatus = false
+        end
+        if ActionCamClassicDB.actionCamFullEnabled == nil then
+            ActionCamClassicDB.actionCamFullEnabled = false
+        end
+        if ActionCamClassicDB.actionCamNoHeadMoveEnabled == nil then
+            ActionCamClassicDB.actionCamNoHeadMoveEnabled = false
+        end
+        if ActionCamClassicDB.actionCamFocusOffEnabled == nil then
+            ActionCamClassicDB.actionCamFocusOffEnabled = false
+        end
+
+        -- last inn verdier til lokale variabler
+        miniAngle = ActionCamClassicDB.miniAngle
+        mountButtonStatus = ActionCamClassicDB.mountButtonStatus
+        actionCamFullEnabled = ActionCamClassicDB.actionCamFullEnabled
+        actionCamNoHeadMoveEnabled = ActionCamClassicDB.actionCamNoHeadMoveEnabled
+        actionCamFocusOffEnabled = ActionCamClassicDB.actionCamFocusOffEnabled
+
+        -- oppdater UI til lagrede verdier
+        UpdateMiniButtonPosition()
+
+        if mountButtonStatus then
+            mountCamButton:SetText("On")
+        else
+            mountCamButton:SetText("Off")
+        end
+
+        if actionCamFullEnabled then
+            fullButton:SetText("ActionCam Full: On")
+            ConsoleExec("ActionCam full")
+        else
+            fullButton:SetText("ActionCam Full: Off")
+        end
+
+        if actionCamNoHeadMoveEnabled then
+            noHeadMoveButton:SetText("No Head Move: On")
+            ConsoleExec("ActionCam noHeadMove")
+        else
+            noHeadMoveButton:SetText("No Head Move: Off")
+        end
+
+        if actionCamFocusOffEnabled then
+            focusOffButton:SetText("Focus Off: On")
+            ConsoleExec("ActionCam focusOff")
+        else
+            focusOffButton:SetText("Focus Off: Off")
+        end
+
+    elseif event == "PLAYER_LOGOUT" then
+        -- lagre nåværende verdier når spilleren logger ut eller gjør /reload
+        ActionCamClassicDB = ActionCamClassicDB or {}
+
+        ActionCamClassicDB.miniAngle = miniAngle
+        ActionCamClassicDB.mountButtonStatus = mountButtonStatus
+        ActionCamClassicDB.actionCamFullEnabled = actionCamFullEnabled
+        ActionCamClassicDB.actionCamNoHeadMoveEnabled = actionCamNoHeadMoveEnabled
+        ActionCamClassicDB.actionCamFocusOffEnabled = actionCamFocusOffEnabled
+    end
+end)
 
 --------------------------------------------------------------------------------------------------------------
 

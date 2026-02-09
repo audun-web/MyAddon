@@ -2,4 +2,5 @@
 ## Title: ActionCamClassic
 ## Notes: Action Camera Addon for WoW Classic
 ## Author: Auduki - Audun Midtgård Meckelborg
+## SavedVariablesPerCharacter: ActionCamClassicDB
 ActionCamClassic.lua
