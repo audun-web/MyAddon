@@ -25,4 +25,4 @@ Eller har jeg brukt ChatGPT for å få veiledning i hvordan man bruker Lua til �
 ## Bilder av Addon in-game
 
 <img src="docs/img/layout.png">
-<img src="docs/img/layout.png">
+<img src="docs/img/minimap.png">
