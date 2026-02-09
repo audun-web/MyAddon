@@ -22,3 +22,7 @@ Jeg hadde lyst til å lære meg språket og ikke kun bruke ChatGPT for å genere
 Eller har jeg brukt ChatGPT for å få veiledning i hvordan man bruker Lua til å kode Addons: https://chatgpt.com
 
 
+## Bilder av Addon in-game
+
+<img src="docs/img/layout.png">
+<img src="docs/img/layout.png">
