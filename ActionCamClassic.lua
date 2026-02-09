@@ -17,6 +17,9 @@ frame:SetBackdrop({
 
 frame:Hide() -- gjør vinduet usynlig
 
+tinsert(UISpecialFrames, frame:GetName()) -- innebygd funksjon i WoW filene for å lukke frame ved å trykke "esc"
+
+
 --------------------------------------------------------------------------------------------------------------
 
 local closeButton = CreateFrame("Button", nil, frame, "UIPanelCloseButton") -- lager en close knapp i vinduet - bruker en closebutton template som ligger standard i spillet
@@ -241,3 +244,12 @@ end)
 
 
 
+--------------------------------------------------------------------------------------------------------------
+
+warningText = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+
+warningText:SetText([[TURNING OFF ONE,
+TURNS OFF THEM ALL!]])
+
+warningText:ClearAllPoints() -- fjerner alle tidligere ankre hvor knappen er festet
+warningText:SetPoint("BOTTOM", focusOffButton, "BOTTOM", 0, -50) -- setter posisjonen til knappen
