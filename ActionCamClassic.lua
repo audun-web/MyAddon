@@ -19,6 +19,19 @@ frame:Hide() -- gjør vinduet usynlig
 
 tinsert(UISpecialFrames, frame:GetName()) -- innebygd funksjon i WoW filene for å lukke frame ved å trykke "esc"
 
+--------------------------------------------------------------------------------------------------------------
+
+SLASH_ACTIONCAM1 = "/acc"
+
+SlashCmdList["ACTIONCAM"] = function(msg)
+    if frame:IsShown() then
+        frame:Hide()
+    else
+        frame:Show()
+    end
+end
+    
+
 
 --------------------------------------------------------------------------------------------------------------
 
@@ -268,3 +281,4 @@ TURNS OFF THEM ALL!]])
 
 warningText:ClearAllPoints() -- fjerner alle tidligere ankre hvor knappen er festet
 warningText:SetPoint("BOTTOM", focusOffButton, "BOTTOM", 0, -50) -- setter posisjonen til knappen
+
