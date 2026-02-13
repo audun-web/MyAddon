@@ -5,7 +5,7 @@ print("ActionCamClassic has loaded!") -- en print i chatten for å bekrefte at a
 
 local frame = CreateFrame("Frame", "MainWindow", UIParent, "BackdropTemplate") -- oppretter vinduet for addonen - Frame = type objekt
 
-frame:SetSize(600, 450) -- størrelse på vinduet
+frame:SetSize(480, 280) -- mer kompakt vindu som passer innholdet bedre (litt bredere for bedre lesbarhet)
 
 frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0) -- posisjon på vinduet
 
@@ -47,13 +47,24 @@ miniButton:SetFrameStrata("HIGH")
 miniButton:SetFrameLevel(Minimap:GetFrameLevel() + 5)
 
 -- ikon inni knappen (addon-logoen)
-local miniButtonIcon = miniButton:CreateTexture(nil, "BACKGROUND")
-miniButtonIcon:SetTexture("Interface\\AddOns\\ActionCamClassic\\docs\\img\\ACC-logo.png")
+-- bruker SetNormalTexture slik at "minimap button collector" addons lettere kan finne knappen
+miniButton:SetNormalTexture("Interface\\AddOns\\ActionCamClassic\\docs\\img\\ACC-logo.png")
+local miniButtonIcon = miniButton:GetNormalTexture()
 miniButtonIcon:SetTexCoord(0.1, 0.9, 0.1, 0.9) -- kutter hjørnene litt for rundere følelse
 -- klassisk plassering brukt av mange addons, tilpasset MiniMap-TrackingBorder
+miniButtonIcon:ClearAllPoints()
 miniButtonIcon:SetPoint("TOPLEFT", miniButton, "TOPLEFT", 7, -5)
 miniButtonIcon:SetPoint("BOTTOMRIGHT", miniButton, "BOTTOMRIGHT", -5, 7)
 miniButton.icon = miniButtonIcon
+
+-- pushed texture (litt mørkere når man klikker)
+miniButton:SetPushedTexture("Interface\\AddOns\\ActionCamClassic\\docs\\img\\ACC-logo.png")
+local miniButtonPushed = miniButton:GetPushedTexture()
+miniButtonPushed:SetTexCoord(0.1, 0.9, 0.1, 0.9)
+miniButtonPushed:ClearAllPoints()
+miniButtonPushed:SetPoint("TOPLEFT", miniButton, "TOPLEFT", 8, -6)
+miniButtonPushed:SetPoint("BOTTOMRIGHT", miniButton, "BOTTOMRIGHT", -6, 8)
+miniButtonPushed:SetVertexColor(0.8, 0.8, 0.8, 1)
 
 -- gull-sirkel rundt, samme stil som mange profesjonelle addons bruker
 local miniButtonBorder = miniButton:CreateTexture(nil, "OVERLAY")
@@ -95,6 +106,7 @@ miniButton:SetScript("OnEnter", function(self) -- OnEnter betyr når musen begyn
     GameTooltip:AddLine(" ", 1, 1, 1)
     GameTooltip:AddLine("Left Click: Open settings", 0.8, 0.8, 0.8) -- ny linje tekst på tooltip framen
     GameTooltip:AddLine("Drag: Move minimap button", 0.8, 0.8, 0.8)
+    GameTooltip:AddLine("Command: /acc opens the panel", 0.8, 0.8, 0.8)
     GameTooltip:Show()
 end)
 
@@ -154,6 +166,26 @@ titleText:SetText("ActionCamClassic") -- hva teksten sier
 --------------------------------------------------------------------------------------------------------------
 local mountButtonStatus = false -- true eller false her er av eller på i instillingspanelet i spillet
 
+-- tekst i panelet for å vise tilbakemeldinger i stedet for å spamme chatten
+local statusText = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+statusText:SetText("")
+
+-- hjelpefunksjon for å sette status-tekst som forsvinner etter 3 sekunder
+local function SetStatusText(message)
+    statusText:SetText(message or "")
+
+    if message and message ~= "" then
+        local currentMessage = message
+        statusText.currentMessage = currentMessage
+
+        C_Timer.After(3, function()
+            if statusText.currentMessage == currentMessage then
+                statusText:SetText("")
+            end
+        end)
+    end
+end
+
 local mountCamButton = CreateFrame("Button", "MountCamButton", frame, "UIPanelButtonTemplate") -- legger til knapp
 mountCamButton:SetSize(80, 32) -- knapp størrelse
 mountCamButton:SetText("Off") -- startteksten på knappen hver gang du åpner spillet
@@ -163,13 +195,10 @@ eventFrame:RegisterEvent("PLAYER_MOUNT_DISPLAY_CHANGED") -- gir framen en funksj
 eventFrame:SetScript("OnEvent", function(self, event) -- script når valgt event skjer
     if mountButtonStatus then -- kjør bare når knappen er aktivert
         if IsMounted() then -- IsMounted er en funksjon i spillet som sier at spilleren rir på hest
-            print("Mounted") -- print funksjon i chat
             ConsoleExec("ActionCam full") -- konsoll kommando i spillet
             ConsoleExec("ActionCam focusOff") 
             ConsoleExec("ActionCam noHeadMove")
         else
-            print("Dismounted")
-
             ConsoleExec("ActionCam off")
         end
     end
@@ -179,12 +208,14 @@ mountCamButton:SetScript("OnClick", function() -- funksjon når knappen trykkes
     mountButtonStatus = not mountButtonStatus -- setter boolean til den motsatte verdien av hva den allerede er
     if mountButtonStatus then
         mountCamButton:SetText("On")
+        SetStatusText("ActionCam when Mounted: On")
     else
         mountCamButton:SetText("Off")
         -- slå av ActionCam direkte hvis man deaktiverer knappen mens man er mounted
         if IsMounted() then
             ConsoleExec("ActionCam off")
         end
+        SetStatusText("ActionCam when Mounted: Off")
     end
 end)
 
@@ -192,8 +223,12 @@ end)
 
 local mountCamTitle = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge") -- legger til en tekst - overlay betyr at den ligger over frame
 
-mountCamTitle:SetPoint("TOPLEFT", frame, "TOPLEFT", 15, -75) -- setter posisjon til teksten
+mountCamTitle:SetPoint("TOPLEFT", frame, "TOPLEFT", 20, -75) -- litt mer margin for bedre spacing
 mountCamTitle:SetText("ActionCam when Mounted") -- teksten
+
+-- plasser status-tekst under hovedtittelen på panelet
+statusText:ClearAllPoints()
+statusText:SetPoint("TOP", titleText, "BOTTOM", 0, -28)
 
 -- plasser knappen midt under teksten over
 mountCamButton:ClearAllPoints() -- fjerner alle tidligere ankre hvor knappen er festet
@@ -204,7 +239,7 @@ mountCamButton:SetPoint("TOP", mountCamTitle, "BOTTOM", 0, -10) -- setter posisj
 -- Lage en horisontal divider under tittelen
 local titleDivider = frame:CreateTexture(nil, "ARTWORK") -- legger til en divider linje
 titleDivider:SetColorTexture(0.6, 0.6, 0.6, 1) -- grå linje, RGBA
-titleDivider:SetSize(560, 1) -- bredde og høyde (1 px tynn)
+titleDivider:SetSize(440, 1) -- bredde og høyde (1 px tynn) tilpasset nytt, mindre vindu
 titleDivider:SetPoint("TOP", titleText, "BOTTOM", 0, -10) -- 10 px under tittelen
 
 --------------------------------------------------------------------------------------------------------------
@@ -212,7 +247,7 @@ titleDivider:SetPoint("TOP", titleText, "BOTTOM", 0, -10) -- 10 px under tittele
 local actionCamSettingsTitle = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge") -- legger til et tekst element
 
 -- Setter teksten på riktig sted i framen
-actionCamSettingsTitle:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -35, -75)
+actionCamSettingsTitle:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -20, -75) -- mer luft fra kanten og bedre spacing mot venstre tittel
 actionCamSettingsTitle:SetText("ActionCam Settings")
 
 
@@ -234,8 +269,7 @@ local function TurnAllOff()
     fullButton:SetText("ActionCam Full: Off")
     noHeadMoveButton:SetText("No Head Move: Off")
     focusOffButton:SetText("Focus Off: Off")
-
-    print("All ActionCam settings turned off") -- print i chat for å bekrefte settings endringen
+    SetStatusText("All ActionCam settings turned off")
 end
 
 
@@ -249,10 +283,12 @@ fullButton:SetPoint("TOP", actionCamSettingsTitle, "BOTTOM", 0, -10) -- setter p
 fullButton:SetScript("OnClick", function() -- script for å skru av og på knappen/knappene
     if actionCamFullEnabled then
         TurnAllOff()
+        -- TurnAllOff() oppdaterer statusText
     else
         actionCamFullEnabled = true
         ConsoleExec("ActionCam full")
         fullButton:SetText("ActionCam Full: On")
+        SetStatusText("ActionCam Full: On")
     end
 end)
 
@@ -266,10 +302,12 @@ noHeadMoveButton:SetPoint("TOP", fullButton, "BOTTOM", 0, -8)
 noHeadMoveButton:SetScript("OnClick", function()
     if actionCamNoHeadMoveEnabled then
         TurnAllOff()
+        -- TurnAllOff() oppdaterer statusText
     else
         actionCamNoHeadMoveEnabled = true
         ConsoleExec("ActionCam noHeadMove")
         noHeadMoveButton:SetText("No Head Move: On")
+        SetStatusText("No Head Move: On")
     end
 end)
 
@@ -283,10 +321,12 @@ focusOffButton:SetPoint("TOP", noHeadMoveButton, "BOTTOM", 0, -8)
 focusOffButton:SetScript("OnClick", function()
     if actionCamFocusOffEnabled then
         TurnAllOff()
+        -- TurnAllOff() oppdaterer statusText
     else
         actionCamFocusOffEnabled = true
         ConsoleExec("ActionCam focusOff")
         focusOffButton:SetText("Focus Off: On")
+        SetStatusText("Focus Off: On")
     end
 end)
 
@@ -379,5 +419,36 @@ warningText:SetText([[TURNING OFF ONE,
 TURNS OFF THEM ALL!]])
 
 warningText:ClearAllPoints() -- fjerner alle tidligere ankre hvor knappen er festet
-warningText:SetPoint("BOTTOM", focusOffButton, "BOTTOM", 0, -50) -- setter posisjonen til knappen
+warningText:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", 15, 20) -- setter posisjonen til teksten så den passer i det nye, mindre vinduet
+
+--------------------------------------------------------------------------------------------------------------
+
+-- Reset til standardverdier knapp
+local resetButton = CreateFrame("Button", "ResetButton", frame, "UIPanelButtonTemplate")
+resetButton:SetText("Reset to Default")
+resetButton:SetSize(resetButton:GetFontString():GetStringWidth() + 20, 26)
+resetButton:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -15, 15) -- nederst høyre hjørne
+
+resetButton:SetScript("OnClick", function()
+    -- ActionCam settings
+    TurnAllOff()
+
+    -- mount setting
+    mountButtonStatus = false
+    mountCamButton:SetText("Off")
+
+    -- minimap button position
+    miniAngle = 180
+    UpdateMiniButtonPosition()
+
+    -- oppdater SavedVariables med en gang (slik at /reload også husker reset)
+    ActionCamClassicDB = ActionCamClassicDB or {}
+    ActionCamClassicDB.miniAngle = miniAngle
+    ActionCamClassicDB.mountButtonStatus = mountButtonStatus
+    ActionCamClassicDB.actionCamFullEnabled = actionCamFullEnabled
+    ActionCamClassicDB.actionCamNoHeadMoveEnabled = actionCamNoHeadMoveEnabled
+    ActionCamClassicDB.actionCamFocusOffEnabled = actionCamFocusOffEnabled
+
+    SetStatusText("All ActionCamClassic settings reset to default")
+end)
 
