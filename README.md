@@ -27,6 +27,8 @@ Etter å ha finjustert koden og designet på addon-en in-game, bestemte jeg meg 
 
 Jeg ga dem zip filen av prosjektet og fikk noen tilbake meldinger på hva jeg måtte endre for at den skulle bli "approved" av deres moderatorer. Etter å ha oppdatert og gitt ChatGPT feilmeldingne jeg fikk av curseforge kjørte den noen terminal kommandoer og den ble akkseptert av Curseforge 5 minutter senere. 
 
+Link til addon: https://www.curseforge.com/wow/addons/actioncamclassic
+
 <img src="docs/img/curseforge.png">
 
 
