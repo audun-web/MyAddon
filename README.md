@@ -21,6 +21,14 @@ Jeg hadde lyst til å lære meg språket og ikke kun bruke ChatGPT for å genere
 
 Eller har jeg brukt ChatGPT for å få veiledning i hvordan man bruker Lua til å kode Addons: https://chatgpt.com
 
+## Curseforge: 
+
+Etter å ha finjustert koden og designet på addon-en in-game, bestemte jeg meg for å legge den ut på Curseforge. Dette er en app designet av Overwolf og er en browser for spill plug-ins og mods.
+
+Jeg ga dem zip filen av prosjektet og fikk noen tilbake meldinger på hva jeg måtte endre for at den skulle bli "approved" av deres moderatorer. Etter å ha oppdatert og gitt ChatGPT feilmeldingne jeg fikk av curseforge kjørte den noen terminal kommandoer og den ble akkseptert av Curseforge 5 minutter senere. 
+
+<img src="docs/img/curseforge.png>
+
 
 ## Bilder av Addon in-game
 
